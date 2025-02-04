@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Constraint(validatedBy = ExistByNameValidation.class)
+@Constraint(validatedBy = ExistsByUsernameValidation.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExistByUsername {
+public @interface ExistsByUsername {
     String message() default "ya existe en la BD, elija otro";
 
     Class<?>[] groups() default {};

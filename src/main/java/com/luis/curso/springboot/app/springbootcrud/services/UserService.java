@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.luis.curso.springboot.app.springbootcrud.entities.User;
 
-public interface UserSerevice {
+public interface UserService {
+
     List<User> findAll();
 
     User save(User user);
 
     boolean existsByUsername(String username);
-
 }

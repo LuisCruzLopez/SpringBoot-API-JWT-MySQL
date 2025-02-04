@@ -15,40 +15,44 @@ import com.luis.curso.springboot.app.springbootcrud.repositories.RoleRepository;
 import com.luis.curso.springboot.app.springbootcrud.repositories.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserSerevice {
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserRepository repository;
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> findAll() {
-        return (List<User>) userRepository.findAll();
+        return (List<User>) repository.findAll();
     }
 
     @Override
     @Transactional
     public User save(User user) {
+
         Optional<Role> optionalRoleUser = roleRepository.findByName("ROLE_USER");
         List<Role> roles = new ArrayList<>();
+
         optionalRoleUser.ifPresent(roles::add);
+
         if (user.isAdmin()) {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
             optionalRoleAdmin.ifPresent(roles::add);
         }
+
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return repository.save(user);
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        System.out.println("entra");
-        return userRepository.existsByUsername(username);
+        return repository.existsByUsername(username);
     }
 
 }

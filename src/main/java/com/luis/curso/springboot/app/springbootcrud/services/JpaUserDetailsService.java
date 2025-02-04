@@ -20,23 +20,31 @@ import com.luis.curso.springboot.app.springbootcrud.repositories.UserRepository;
 public class JpaUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsername(username);
 
-        if (!userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("Username %s no existe en el sistema", username));
+        Optional<User> userOptional = repository.findByUsername(username);
+
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException(String.format("Username %s no existe en el sistema!", username));
         }
 
         User user = userOptional.orElseThrow();
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                user.isEnabled(), true, true, true, authorities);
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                user.isEnabled(),
+                true,
+                true,
+                true,
+                authorities);
     }
 
 }

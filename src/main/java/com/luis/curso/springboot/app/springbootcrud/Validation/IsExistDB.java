@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Constraint(validatedBy = IsExistDBValidaton.class)
+@Constraint(validatedBy = IsExistsDbValidation.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsExistDB {

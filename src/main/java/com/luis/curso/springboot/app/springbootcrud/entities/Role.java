@@ -19,14 +19,16 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String name;
+
     @JsonIgnoreProperties({ "roles", "handler", "hibernateLazyInitializer" })
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
     public Role() {
-        users = new ArrayList<>();
+        this.users = new ArrayList<>();
     }
 
     public Role(String name) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.luis.curso.springboot.app.springbootcrud.Validation.ExistByUsername;
+import com.luis.curso.springboot.app.springbootcrud.Validation.ExistsByUsername;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,40 +30,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ExistByUsername
+    @ExistsByUsername
     @NotBlank
     @Size(min = 4, max = 12)
     @Column(unique = true)
     private String username;
+
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    // @JsonIgnore
     private String password;
-    @ManyToMany
+
     @JsonIgnoreProperties({ "users", "handler", "hibernateLazyInitializer" })
+    @ManyToMany
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {
             @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
     private List<Role> roles;
-    private boolean enabled;
-    @Transient
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean admin;
 
     public User() {
         roles = new ArrayList<>();
     }
 
+    private boolean enabled;
+
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean admin;
+
     @PrePersist
-    public void enabled() {
+    public void prePersist() {
         enabled = true;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Long getId() {
@@ -98,16 +93,20 @@ public class User {
         this.roles = roles;
     }
 
-    public Boolean isAdmin() {
+    public boolean isAdmin() {
         return admin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setAdmin(boolean admin) {
         this.admin = admin;
     }
 
-    public Boolean getAdmin() {
-        return admin;
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

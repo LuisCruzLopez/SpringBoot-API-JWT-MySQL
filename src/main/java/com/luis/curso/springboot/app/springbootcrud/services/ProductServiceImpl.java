@@ -22,14 +22,14 @@ public class ProductServiceImpl implements ProductService {
         return (List<Product>) repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> findById(Long id) {
         return repository.findById(id);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Product save(Product product) {
         return repository.save(product);
     }
@@ -39,14 +39,14 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> update(Long id, Product product) {
         Optional<Product> productOptional = repository.findById(id);
         if (productOptional.isPresent()) {
-            Product productDB = productOptional.orElseThrow();
+            Product productDb = productOptional.orElseThrow();
 
-            productDB.setSku(product.getSku());
-            productDB.setName(product.getName());
-            productDB.setDescription(product.getDescription());
-            productDB.setPrice(product.getPrice());
-            // converit un objeto product en un Optional<Product>
-            return Optional.of(repository.save(productDB));
+            productDb.setSku(product.getSku());
+            productDb.setName(product.getName());
+            productDb.setDescription(product.getDescription());
+            productDb.setPrice(product.getPrice());
+            return Optional.of(repository.save(productDb));
+
         }
         return productOptional;
     }
@@ -55,8 +55,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> delete(Long id) {
         Optional<Product> productOptional = repository.findById(id);
-        productOptional.ifPresent(productDB -> {
-            repository.delete(productDB);
+        productOptional.ifPresent(productDb -> {
+            repository.delete(productDb);
         });
         return productOptional;
     }
